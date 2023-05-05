@@ -3,8 +3,12 @@ package com.example.recyclerview.model
 import com.github.javafaker.Faker
 import java.util.Collections
 
-class UserService {
+typealias UserListener = (users: List<User>) -> Unit
+
+class UsersService {
     private var users = mutableListOf<User>()
+
+    private val listeners = mutableSetOf<UserListener>()
 
     init {
         val faker = Faker.instance()
@@ -27,6 +31,7 @@ class UserService {
         val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex != UNDEFINED) {
             users.removeAt(oldIndex)
+            notifyChanges()
         }
     }
 
@@ -36,6 +41,20 @@ class UserService {
         val newIndex = oldIndex + moveBy
         if (newIndex >= users.size || newIndex < 0) return
         Collections.swap(users, oldIndex, newIndex)
+        notifyChanges()
+    }
+
+    fun addListener(listener: UserListener) {
+        listeners.add(listener)
+        listener.invoke(users)
+    }
+
+    fun removeListener(listener: UserListener) {
+        listeners.remove(listener)
+    }
+
+    private fun notifyChanges() {
+        listeners.forEach { it.invoke(users) }
     }
 
     companion object {
