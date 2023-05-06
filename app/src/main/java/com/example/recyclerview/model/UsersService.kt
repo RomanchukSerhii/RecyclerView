@@ -30,6 +30,7 @@ class UsersService {
     fun deleteUser(user: User) {
         val oldIndex = users.indexOfFirst { it.id == user.id }
         if (oldIndex != UNDEFINED) {
+            users = ArrayList(users)
             users.removeAt(oldIndex)
             notifyChanges()
         }
@@ -40,6 +41,7 @@ class UsersService {
         if (oldIndex == UNDEFINED) return
         val newIndex = oldIndex + moveBy
         if (newIndex >= users.size || newIndex < 0) return
+        users = ArrayList(users)
         Collections.swap(users, oldIndex, newIndex)
         notifyChanges()
     }
