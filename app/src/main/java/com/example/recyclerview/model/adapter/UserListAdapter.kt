@@ -20,6 +20,8 @@ interface UserActionListener {
     fun onUserDelete(user: User)
 
     fun onUserDetails(user: User)
+
+    fun onUserFire(user: User)
 }
 
 class UserListAdapter(
@@ -50,13 +52,14 @@ class UserListAdapter(
 
     override fun onBindViewHolder(holder: UserItemViewHolder, position: Int) {
         val user = getItem(position)
+        val context = holder.itemView.context
 
         with(holder.binding) {
             holder.itemView.tag = user
             ivMoreInformation.tag = user
 
             tvUserName.text = user.name
-            tvUserCompany.text = user.company
+            tvUserCompany.text = user.company.ifEmpty { context.getString(R.string.unemployed) }
             if(user.photo.isNotBlank()) {
                 Glide.with(holder.itemView.context)
                     .load(user.photo)
@@ -86,6 +89,9 @@ class UserListAdapter(
                 isEnabled = position < currentList.size - 1
             }
         popupMenu.menu.add(0, ID_REMOVE, Menu.NONE, context.getString(R.string.remove))
+        popupMenu.menu.add(0, ID_FIRE, Menu.NONE, context.getString(R.string.fire)).apply {
+            isEnabled = user.company.isNotEmpty()
+        }
 
         popupMenu.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -97,6 +103,9 @@ class UserListAdapter(
                 }
                 ID_REMOVE -> {
                     actionListener.onUserDelete(user)
+                }
+                ID_FIRE -> {
+                    actionListener.onUserFire(user)
                 }
             }
             return@setOnMenuItemClickListener true
@@ -112,6 +121,7 @@ class UserListAdapter(
         private const val ID_MOVE_UP = 1
         private const val ID_MOVE_DOWN = 2
         private const val ID_REMOVE = 3
+        private const val ID_FIRE = 4
         private val DiffCallback = object : DiffUtil.ItemCallback<User>() {
             override fun areItemsTheSame(oldItem: User, newItem: User): Boolean {
                 return oldItem.id == newItem.id

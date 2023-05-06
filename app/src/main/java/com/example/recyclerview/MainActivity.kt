@@ -3,6 +3,7 @@ package com.example.recyclerview
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.recyclerview.databinding.ActivityMainBinding
 import com.example.recyclerview.model.User
 import com.example.recyclerview.model.UserListener
@@ -31,6 +32,10 @@ class MainActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
+
+            override fun onUserFire(user: User) {
+                usersService.fireUser(user)
+            }
         })
     }
 
@@ -43,6 +48,10 @@ class MainActivity : AppCompatActivity() {
 
         usersService.addListener(usersListener)
         binding.recyclerView.adapter = userListAdapter
+        val itemAnimator = binding.recyclerView.itemAnimator
+        if (itemAnimator is DefaultItemAnimator) {
+            itemAnimator.supportsChangeAnimations = false
+        }
 
     }
 

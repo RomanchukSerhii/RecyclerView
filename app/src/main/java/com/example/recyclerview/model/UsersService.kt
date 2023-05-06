@@ -46,6 +46,15 @@ class UsersService {
         notifyChanges()
     }
 
+    fun fireUser(user: User) {
+        val index = users.indexOfFirst { it.id == user.id }
+        if (index == UNDEFINED) return
+        val updateUser = user.copy(company = "")
+        users = ArrayList(users)
+        users[index] = updateUser
+        notifyChanges()
+    }
+
     fun addListener(listener: UserListener) {
         listeners.add(listener)
         listener.invoke(users)
