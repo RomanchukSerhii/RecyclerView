@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.recyclerview.App
 import com.example.recyclerview.R
@@ -23,14 +24,18 @@ class UserListFragment : Fragment() {
     private val binding: FragmentUserListBinding
         get() = _binding ?: throw RuntimeException("FragmentUserListBinding == null")
 
+    private val viewModel: UserListViewModel by lazy {
+        ViewModelProvider(this)[UserListViewModel::class.java]
+    }
+
     private val userListAdapter: UserListAdapter by lazy {
         UserListAdapter(object : UserActionListener {
             override fun onUserMove(user: User, moveBy: Int) {
-                usersService.moveUser(user, moveBy)
+                viewModel.moveUser(user, moveBy)
             }
 
             override fun onUserDelete(user: User) {
-                usersService.deleteUser(user)
+                viewModel.deleteUser(user)
             }
 
             override fun onUserDetails(user: User) {
@@ -42,14 +47,10 @@ class UserListFragment : Fragment() {
             }
 
             override fun onUserFire(user: User) {
-                usersService.fireUser(user)
+                viewModel.fireUser(user)
             }
         })
     }
-
-    private val usersService: UsersService
-        get() = (requireContext().applicationContext as App).usersService
-
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,7 +64,9 @@ class UserListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        usersService.addListener(usersListener)
+        viewModel.users.observe(viewLifecycleOwner) {
+            userListAdapter.submitList(it)
+        }
         binding.recyclerView.adapter = userListAdapter
         val itemAnimator = binding.recyclerView.itemAnimator
         if (itemAnimator is DefaultItemAnimator) {
@@ -73,11 +76,6 @@ class UserListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        usersService.removeListener(usersListener)
         _binding = null
-    }
-
-    private val usersListener: UserListener = {
-        userListAdapter.submitList(it)
     }
 }

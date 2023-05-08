@@ -2,15 +2,23 @@ package com.example.recyclerview
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
-import androidx.recyclerview.widget.DefaultItemAnimator
 import com.example.recyclerview.databinding.ActivityMainBinding
-import com.example.recyclerview.model.User
-import com.example.recyclerview.model.UserListener
-import com.example.recyclerview.model.UsersService
-import com.example.recyclerview.model.adapter.UserActionListener
-import com.example.recyclerview.model.adapter.UserListAdapter
+import com.example.recyclerview.screens.UserListFragment
 
 class MainActivity : AppCompatActivity() {
 
+    private val binding: ActivityMainBinding by lazy {
+        ActivityMainBinding.inflate(layoutInflater)
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(binding.root)
+
+        if (savedInstanceState == null) {
+            supportFragmentManager.beginTransaction()
+                .add(R.id.fragment_container, UserListFragment())
+                .commit()
+        }
+    }
 }
