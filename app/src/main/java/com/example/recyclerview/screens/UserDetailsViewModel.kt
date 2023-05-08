@@ -23,7 +23,7 @@ class UserDetailsViewModel(
         }
     }
 
-    fun deleteUser(user: User) {
+    fun deleteUser() {
         val userDetails = this.userDetails.value ?: return
         usersService.deleteUser(userDetails.user)
     }
