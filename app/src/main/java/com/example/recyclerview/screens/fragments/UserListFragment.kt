@@ -1,4 +1,4 @@
-package com.example.recyclerview.screens
+package com.example.recyclerview.screens.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -11,9 +11,11 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerview.databinding.FragmentUserListBinding
 import com.example.recyclerview.model.User
-import com.example.recyclerview.model.UsersService
 import com.example.recyclerview.model.adapter.UserActionListener
 import com.example.recyclerview.model.adapter.UserListAdapter
+import com.example.recyclerview.screens.viewmodels.UserListViewModel
+import com.example.recyclerview.screens.factory
+import com.example.recyclerview.screens.navigator
 
 class UserListFragment : Fragment() {
 
@@ -36,11 +38,7 @@ class UserListFragment : Fragment() {
             }
 
             override fun onUserDetails(user: User) {
-                Toast.makeText(
-                    requireContext(),
-                    "${user.name} - ${user.company}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                navigator().showDetails(user)
             }
 
             override fun onUserFire(user: User) {

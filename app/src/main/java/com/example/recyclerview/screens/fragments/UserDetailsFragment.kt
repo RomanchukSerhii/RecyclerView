@@ -1,4 +1,4 @@
-package com.example.recyclerview.screens
+package com.example.recyclerview.screens.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -9,6 +9,9 @@ import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.recyclerview.R
 import com.example.recyclerview.databinding.FragmentUserDetailsBinding
+import com.example.recyclerview.screens.viewmodels.UserDetailsViewModel
+import com.example.recyclerview.screens.factory
+import com.example.recyclerview.screens.navigator
 
 class UserDetailsFragment : Fragment() {
 
@@ -23,9 +26,10 @@ class UserDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_details, container, false)
+        _binding = FragmentUserDetailsBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -39,6 +43,8 @@ class UserDetailsFragment : Fragment() {
     private fun setListeners() {
         binding.deleteButton.setOnClickListener {
             viewModel.deleteUser()
+            navigator().toast(R.string.user_has_been_deleted)
+            navigator().goBack()
         }
     }
 

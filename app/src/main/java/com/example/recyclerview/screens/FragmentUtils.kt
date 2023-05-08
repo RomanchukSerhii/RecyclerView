@@ -1,11 +1,12 @@
 package com.example.recyclerview.screens
 
-import android.app.Application
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.recyclerview.App
-import com.example.recyclerview.model.UsersService
+import com.example.recyclerview.Navigator
+import com.example.recyclerview.screens.viewmodels.UserDetailsViewModel
+import com.example.recyclerview.screens.viewmodels.UserListViewModel
 
 class ViewModelFactory(
     private val app: App
@@ -26,3 +27,5 @@ class ViewModelFactory(
 }
 
 fun Fragment.factory() = ViewModelFactory(requireContext().applicationContext as App)
+
+fun Fragment.navigator() = requireActivity() as Navigator

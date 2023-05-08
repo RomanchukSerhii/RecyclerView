@@ -1,4 +1,4 @@
-package com.example.recyclerview.screens
+package com.example.recyclerview.screens.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
