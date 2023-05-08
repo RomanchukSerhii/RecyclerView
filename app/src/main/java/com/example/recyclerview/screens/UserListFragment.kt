@@ -8,12 +8,9 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
-import com.example.recyclerview.App
-import com.example.recyclerview.R
-import com.example.recyclerview.databinding.ActivityMainBinding
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recyclerview.databinding.FragmentUserListBinding
 import com.example.recyclerview.model.User
-import com.example.recyclerview.model.UserListener
 import com.example.recyclerview.model.UsersService
 import com.example.recyclerview.model.adapter.UserActionListener
 import com.example.recyclerview.model.adapter.UserListAdapter
@@ -25,7 +22,7 @@ class UserListFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentUserListBinding == null")
 
     private val viewModel: UserListViewModel by lazy {
-        ViewModelProvider(this)[UserListViewModel::class.java]
+        ViewModelProvider(this, factory())[UserListViewModel::class.java]
     }
 
     private val userListAdapter: UserListAdapter by lazy {
@@ -67,7 +64,11 @@ class UserListFragment : Fragment() {
         viewModel.users.observe(viewLifecycleOwner) {
             userListAdapter.submitList(it)
         }
+
+        val layoutManager = LinearLayoutManager(requireContext())
+        binding.recyclerView.layoutManager = layoutManager
         binding.recyclerView.adapter = userListAdapter
+
         val itemAnimator = binding.recyclerView.itemAnimator
         if (itemAnimator is DefaultItemAnimator) {
             itemAnimator.supportsChangeAnimations = false

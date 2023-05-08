@@ -14,6 +14,10 @@ class UserListViewModel(
     private val _users = MutableLiveData<List<User>>()
     val users: LiveData<List<User>> = _users
 
+    private val listener: UserListener = {
+        _users.value = it
+    }
+
     init {
         loadUsers()
     }
@@ -37,9 +41,5 @@ class UserListViewModel(
 
     private fun loadUsers() {
         usersService.addListener(listener)
-    }
-
-    private val listener: UserListener = {
-        _users.value = it
     }
 }
