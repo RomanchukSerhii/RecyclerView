@@ -1,5 +1,6 @@
 package com.example.recyclerview.model
 
+import com.example.recyclerview.UserNotFoundException
 import com.github.javafaker.Faker
 import java.util.Collections
 
@@ -25,6 +26,14 @@ class UsersService {
 
     fun getUsers(): List<User> {
         return users.toList()
+    }
+
+    fun getUserDetailsById(id: Long): UserDetails {
+        val user = users.firstOrNull { it.id == id } ?: throw UserNotFoundException()
+        return UserDetails(
+            user = user,
+            details = Faker.instance().lorem().paragraphs(3).joinToString("\n\n")
+        )
     }
 
     fun deleteUser(user: User) {

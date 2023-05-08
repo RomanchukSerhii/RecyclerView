@@ -6,8 +6,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.recyclerview.R
+import com.example.recyclerview.databinding.FragmentUserDetailsBinding
 
 class UserDetailsFragment : Fragment() {
+
+    private var _binding: FragmentUserDetailsBinding? = null
+    private val binding: FragmentUserDetailsBinding
+        get() = _binding ?: throw RuntimeException("FragmentUserDetailsBinding == null")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
